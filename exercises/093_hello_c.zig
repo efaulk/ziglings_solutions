@@ -43,9 +43,15 @@ const std = @import("std");
 // and here the new import for C
 const c = @cImport({
     @cInclude("unistd.h");
+    @cInclude("stdlib.h");
+    @cInclude("stdio.h");
 });
 
-pub fn main() void {
+fn getenv(name: [:0]const u8) ![*:0]u8 {
+    return c.getenv(name) orelse error.EnvVariableNotFound;
+}
+
+pub fn main() !void {
 
     // In order to output text that can be evaluated by the
     // Zig Builder, we need to write it to the Error output.
@@ -54,7 +60,10 @@ pub fn main() void {
     //
     // In this exercise we use 'write' to output 17 chars,
     // but something is still missing...
-    const c_res = write(2, "Hello C from Zig!", 17);
+    const c_res = c.printf("Hello C from Zig!\n");
+    const c_str = try getenv("HOMES");
+
+    std.debug.print("Env variable: {s}\n", .{c_str});
 
     // let's see what the result from C is:
     std.debug.print(" - C result is {d} chars written.\n", .{c_res});

@@ -5,7 +5,7 @@
 // The following contexts are already IMPLICITLY evaluated at
 // compile time, and adding the 'comptime' keyword would be
 // superfluous, redundant, and smelly:
-//
+
 //    * The container-level scope (outside of any function in a source file)
 //    * Type declarations of:
 //        * Variables
@@ -39,7 +39,7 @@ const llamas = makeLlamas(llama_count);
 
 // And here's the function. Note that the return value type
 // depends on one of the input arguments!
-fn makeLlamas(count: usize) [count]u8 {
+fn makeLlamas(comptime count: usize) [count]u8 {
     var temp: [count]u8 = undefined;
     var i = 0;
 
